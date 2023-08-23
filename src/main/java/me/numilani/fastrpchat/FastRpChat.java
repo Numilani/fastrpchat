@@ -1,7 +1,10 @@
 package me.numilani.fastrpchat;
 
+import cloud.commandframework.Command;
+import cloud.commandframework.arguments.standard.StringArgument;
 import com.bergerkiller.bukkit.common.cloud.CloudSimpleHandler;
 import com.bergerkiller.bukkit.common.config.FileConfiguration;
+import me.numilani.fastrpchat.commands.ChatCommandHandler;
 import me.numilani.fastrpchat.data.IDataSourceConnector;
 import me.numilani.fastrpchat.data.SqliteDataSourceConnector;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,16 +30,31 @@ public final class FastRpChat extends JavaPlugin {
         cfg = new FileConfiguration(this, "config.yml");
         cfg.load();
 
-        // todo: do a check for datasourcetype once that's added to config
+        // do a check for datasourcetype once that's added to config
         // for now, just set datasource to sqlite always
         try {
             dataSource = new SqliteDataSourceConnector(this);
+            if (isFirstRun) dataSource.initDatabase();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         cmdHandler.enable(this);
-//        cmdHandler.getParser().parse()
+        cmdHandler.getParser().parse(new ChatCommandHandler(this));
+//        var testCmd = cmdHandler.getManager().commands().stream()
+//                .filter(x -> x.getArguments().stream().findFirst().get().getName().equals("test"))
+//                .findFirst().get();
+//        cmdHandler.getManager().command(cmdHandler.getManager().commandBuilder("asdf", testCmd.getCommandMeta()).proxies(testCmd).build());
+
+//        var chatRangeCmd = cmdHandler.getManager().commands().stream()
+//                .filter(x -> x.getArguments().stream().findFirst().get().getName().equals("cr"))
+//                .findFirst().get();
+
+//        String[] ranges = {"global", "yell", "local", "quiet", "whisper"};
+//        String[] aliases = {"g", "y", "l", "q", "w"};
+//        for (var x : aliases){
+//            cmdHandler.getManager().commandBuilder(x, chatRangeCmd.getCommandMeta()).proxies(chatRangeCmd).argument(StringArgument.of(x));
+//        }
     }
 
     private void doPluginInit() {

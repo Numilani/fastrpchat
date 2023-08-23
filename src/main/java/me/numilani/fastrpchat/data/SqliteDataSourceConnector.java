@@ -11,10 +11,11 @@ public class SqliteDataSourceConnector implements IDataSourceConnector {
 
     private FastRpChat plugin;
     private String dbFilename = "fastrpchat.db";
-    public Connection conn = DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), dbFilename).getPath());
+    public Connection conn;
 
     public SqliteDataSourceConnector(FastRpChat plugin) throws SQLException {
         this.plugin = plugin;
+        conn = DriverManager.getConnection("jdbc:sqlite:" + new File(plugin.getDataFolder(), dbFilename).getPath());
     }
 
     public void ensureConnClosed() throws SQLException {
@@ -45,7 +46,7 @@ public class SqliteDataSourceConnector implements IDataSourceConnector {
             return queryRes.getString(1);
         }
         // if there's no DB entry, just return global range
-        else return "global";
+        else return "none";
     }
 
     public void setChatRange(String playerId, String range) throws SQLException {

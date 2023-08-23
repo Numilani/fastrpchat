@@ -2,3 +2,5 @@ name: FastRpChat
 version: '${version}'
 main: me.numilani.fastrpchat.FastRpChat
 api-version: '1.20'
+depend:
+  - BKCommonLib
