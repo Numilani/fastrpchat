@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.SQLException;
 
@@ -23,12 +24,22 @@ public class FastRpChatListeners implements Listener {
         }
     }
 
-    // todo: listener isn't working as expected
     @EventHandler
     public void onChatAsync(AsyncPlayerChatEvent event) throws SQLException {
-        RangedChatService.SendRangedMessage(
-                event.getPlayer(),
-                event.getMessage(),
-                plugin.dataSource.getChatRange(event.getPlayer().getUniqueId().toString()));
+        event.setCancelled(true);
+        var x = new BukkitRunnable(){
+
+            @Override
+            public void run() {
+                try {
+                    plugin.rangedChatService.SendRangedMessage(
+                            event.getPlayer(),
+                            event.getMessage(),
+                            plugin.dataSource.getChatRange(event.getPlayer().getUniqueId().toString()));
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }.runTask(plugin);
     }
 }

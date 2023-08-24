@@ -1,14 +1,13 @@
 package me.numilani.fastrpchat;
 
-import cloud.commandframework.Command;
-import cloud.commandframework.arguments.standard.StringArgument;
 import com.bergerkiller.bukkit.common.cloud.CloudSimpleHandler;
 import com.bergerkiller.bukkit.common.config.FileConfiguration;
 import me.numilani.fastrpchat.commands.ChatCommandHandler;
 import me.numilani.fastrpchat.data.IDataSourceConnector;
 import me.numilani.fastrpchat.data.SqliteDataSourceConnector;
+import me.numilani.fastrpchat.listeners.FastRpChatListeners;
+import me.numilani.fastrpchat.services.RangedChatService;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.checkerframework.checker.units.qual.C;
 
 import java.sql.SQLException;
 
@@ -17,6 +16,7 @@ public final class FastRpChat extends JavaPlugin {
     public CloudSimpleHandler cmdHandler = new CloudSimpleHandler();
     public FileConfiguration cfg;
     public IDataSourceConnector dataSource;
+    public RangedChatService rangedChatService = new RangedChatService(this);
 
     @Override
     public void onEnable() {
@@ -39,6 +39,10 @@ public final class FastRpChat extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
+        // Register events
+        getServer().getPluginManager().registerEvents(new FastRpChatListeners(this), this);
+
+        // Register commands
         cmdHandler.enable(this);
         cmdHandler.getParser().parse(new ChatCommandHandler(this));
 //        var testCmd = cmdHandler.getManager().commands().stream()

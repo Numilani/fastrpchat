@@ -45,15 +45,17 @@ public class SqliteDataSourceConnector implements IDataSourceConnector {
         if (queryRes.next()){
             return queryRes.getString(1);
         }
-        // if there's no DB entry, just return global range
         else return "none";
     }
 
     public void setChatRange(String playerId, String range) throws SQLException {
         var statement = conn.prepareStatement("UPDATE PlayerChatSettings SET range = ? WHERE playerId = ?");
         statement.setString(1, range);
-        statement.setString(1, playerId);
-        statement.execute();
+        statement.setString(2, playerId);
+        var x = statement.executeUpdate();
+        if (x == 0){
+            plugin.getLogger().warning("couldn't update range, not sure why?!");
+        }
         // todo: add try-catch here
     }
 
