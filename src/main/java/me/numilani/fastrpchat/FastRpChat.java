@@ -3,6 +3,7 @@ package me.numilani.fastrpchat;
 import com.bergerkiller.bukkit.common.cloud.CloudSimpleHandler;
 import com.bergerkiller.bukkit.common.config.FileConfiguration;
 import me.numilani.fastrpchat.commands.ChatCommandHandler;
+import me.numilani.fastrpchat.commands.NameUtilityCommandHandler;
 import me.numilani.fastrpchat.data.IDataSourceConnector;
 import me.numilani.fastrpchat.data.SqliteDataSourceConnector;
 import me.numilani.fastrpchat.listeners.FastRpChatListeners;
@@ -45,6 +46,7 @@ public final class FastRpChat extends JavaPlugin {
         // Register commands
         cmdHandler.enable(this);
         cmdHandler.getParser().parse(new ChatCommandHandler(this));
+        cmdHandler.getParser().parse(new NameUtilityCommandHandler(this));
 //        var testCmd = cmdHandler.getManager().commands().stream()
 //                .filter(x -> x.getArguments().stream().findFirst().get().getName().equals("test"))
 //                .findFirst().get();

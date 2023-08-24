@@ -1,7 +1,6 @@
 package me.numilani.fastrpchat.listeners;
 
 import me.numilani.fastrpchat.FastRpChat;
-import me.numilani.fastrpchat.services.RangedChatService;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
@@ -32,7 +31,7 @@ public class FastRpChatListeners implements Listener {
             @Override
             public void run() {
                 try {
-                    plugin.rangedChatService.SendRangedMessage(
+                    plugin.rangedChatService.SendRangedChat(
                             event.getPlayer(),
                             event.getMessage(),
                             plugin.dataSource.getChatRange(event.getPlayer().getUniqueId().toString()));
