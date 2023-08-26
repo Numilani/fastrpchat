@@ -97,38 +97,39 @@ public class ChatCommandHandler {
         ChangeChannelOrSend(sender, "quiet", msg);
     }
 
-    @ProxiedBy("w")
+    @ProxiedBy("wh")
     @CommandMethod("whisper [msg]")
     public void ChatWhisper(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "whisper", msg);
     }
 
-    @CommandMethod("meg [emote]")
+    @CommandMethod("meg <emote>")
     public void EmoteGlobal(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "global", emote);
     }
 
-    @CommandMethod("mep [emote]")
+    @CommandMethod("mep <emote>")
     public void EmoteProvince(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "province", emote);
     }
 
-    @CommandMethod("mey [emote]")
+    @CommandMethod("mey <emote>")
     public void EmoteYell(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "yell", emote);
     }
 
-    @CommandMethod("mel [emote]")
+    @CommandMethod("mel <emote>")
     public void EmoteLocal(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "local", emote);
     }
 
-    @CommandMethod("meq [emote]")
+    @CommandMethod("meq <emote>")
     public void EmoteQuiet(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "quiet", emote);
     }
 
-    @CommandMethod("mew [emote]")
+    @ProxiedBy("mewh")
+    @CommandMethod("mew <emote>")
     public void EmoteWhisper(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "whisper", emote);
     }

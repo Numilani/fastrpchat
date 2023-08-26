@@ -4,3 +4,28 @@ main: me.numilani.fastrpchat.FastRpChat
 api-version: '1.20'
 depend:
   - BKCommonLib
+commands:
+  ch:
+    description: "Switch chat ranges, or send a single message in a specified range."
+    aliases:
+      - global
+      - g
+      - province
+      - p
+      - yell
+      - y
+      - local
+      - l
+      - quiet
+      - q
+      - whisper
+      - wh
+  me:
+    description: "Send an emote as your character."
+    aliases:
+      - meg
+      - mep
+      - mey
+      - mel
+      - meq
+      - mew

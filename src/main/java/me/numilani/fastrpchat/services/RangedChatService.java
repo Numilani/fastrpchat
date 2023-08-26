@@ -60,10 +60,10 @@ public class RangedChatService {
         }
 
         // send message to self
-        player.sendMessage(formattedMessage);
 
         // inform player if no one is in range to hear
         if (player.getWorld().getNearbyEntities(player.getLocation(), radius, radius, radius, x -> x instanceof Player).size() <= 1){
+            player.sendMessage(formattedMessage);
             player.sendMessage(ChatColor.DARK_RED + "You speak, but there's no one close enough to hear you...");
             return;
         }
