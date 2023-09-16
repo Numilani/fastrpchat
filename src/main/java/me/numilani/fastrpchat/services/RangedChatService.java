@@ -86,7 +86,7 @@ public class RangedChatService {
             return;
         }
 
-        var formattedMsg = String.format("[" + GetRangeColor(range) + range.toUpperCase().toCharArray()[0] + ChatColor.RESET  + "] %s:" + GetRangeColor(range) + " %s", player.getDisplayName(), message);
+        var formattedMsg = String.format("[" + GetRangeColor(range) + range.toUpperCase().toCharArray()[0] + ChatColor.RESET  + "] %s:" + GetRangeColor(range) + " %s",     player.getDisplayName(), message);
 
         SendRangedMessage(player, formattedMsg, radius);
     }
