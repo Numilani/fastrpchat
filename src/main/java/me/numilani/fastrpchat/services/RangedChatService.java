@@ -18,15 +18,15 @@ public class RangedChatService {
             case "global":
                 return -1;
             case "province":
-                return 162;
+                return 192;
             case "yell":
-                return 54;
+                return 64;
             case "local":
-                return 18;
+                return 20;
             case "quiet":
-                return 6;
+                return 8;
             case "whisper":
-                return 2;
+                return 3;
             default:
                 throw new Exception(String.format(ChatColor.DARK_RED + "Couldn't figure out what range you wanted to send in! (range value: %s)", range));
         }
