@@ -11,6 +11,9 @@ import me.numilani.fastrpchat.services.RangedChatService;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 public final class FastRpChat extends JavaPlugin {
 
@@ -18,6 +21,8 @@ public final class FastRpChat extends JavaPlugin {
     public FileConfiguration cfg;
     public IDataSourceConnector dataSource;
     public RangedChatService rangedChatService = new RangedChatService(this);
+
+    public List<UUID> chatspyUsers = new ArrayList<>();
 
     @Override
     public void onEnable() {
@@ -70,8 +75,6 @@ public final class FastRpChat extends JavaPlugin {
 
         cfgFile.saveSync();
     }
-
-
 
     @Override
     public void onDisable() {

@@ -2,6 +2,7 @@ package me.numilani.fastrpchat.commands;
 
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.ProxiedBy;
 import cloud.commandframework.annotations.specifier.Greedy;
 import me.numilani.fastrpchat.FastRpChat;
@@ -17,7 +18,7 @@ public class ChatCommandHandler {
     private FastRpChat plugin;
 
     // TODO: (FUTURE) move this to config check
-    private String[] knownRanges = {"global", "province", "yell", "local", "quiet", "whisper"};
+    private String[] knownRanges = {"global", "province", "yell", "local", "quiet", "whisper", "staff"};
 
     public ChatCommandHandler(FastRpChat plugin){
         this.plugin = plugin;
@@ -132,6 +133,27 @@ public class ChatCommandHandler {
     @CommandMethod("mew <emote>")
     public void EmoteWhisper(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "whisper", emote);
+    }
+
+    @CommandPermission("fastrpchat.chatspy")
+    @CommandMethod("chatspy")
+    public void ToggleChatspy(CommandSender sender) {
+        var userId = ((Player)sender).getUniqueId();
+        if (plugin.chatspyUsers.contains(userId)){
+            plugin.chatspyUsers.remove(userId);
+            sender.sendMessage("Disabled Chatspy");
+        }
+        else{
+            plugin.chatspyUsers.add(userId);
+            sender.sendMessage("Enabled Chatspy");
+        }
+    }
+
+    @CommandPermission("fastrpchat.staffchat")
+    @ProxiedBy("st")
+    @CommandMethod("staff [msg]")
+    public void ChatStaff(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
+        ChangeChannelOrSend(sender, "staff", msg);
     }
 
 }

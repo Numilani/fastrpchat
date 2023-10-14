@@ -27,6 +27,8 @@ public class RangedChatService {
                 return 8;
             case "whisper":
                 return 3;
+            case "staff":
+                return -2;
             default:
                 throw new Exception(String.format(ChatColor.DARK_RED + "Couldn't figure out what range you wanted to send in! (range value: %s)", range));
         }
@@ -44,6 +46,8 @@ public class RangedChatService {
                 return ChatColor.GRAY;
             case "whisper":
                 return ChatColor.DARK_GRAY;
+            case "staff":
+                return ChatColor.DARK_GREEN;
             default:
                 return ChatColor.RESET;
         }
@@ -59,11 +63,26 @@ public class RangedChatService {
             return;
         }
 
+        if (radius == -2){
+            for (var p : Bukkit.getOnlinePlayers()){
+                if (p.hasPermission("fastrpchat.staffchat")){
+                    p.sendMessage(formattedMessage);
+                }
+            }
+            return;
+        }
+
         // send message to self
 
         // inform player if no one is in range to hear
         if (player.getWorld().getNearbyEntities(player.getLocation(), radius, radius, radius, x -> x instanceof Player).size() <= 1){
             player.sendMessage(formattedMessage);
+            Bukkit.getServer().getConsoleSender().sendMessage(formattedMessage + ChatColor.DARK_GRAY + " [out of range]");
+            for (var id : plugin.chatspyUsers) {
+                var p = Bukkit.getPlayer(id);
+                if (p == null) continue;
+                p.sendMessage(ChatColor.DARK_RED + "[SPY]" + ChatColor.RESET + formattedMessage + ChatColor.DARK_GRAY + " [out of range]");
+            }
             player.sendMessage(ChatColor.DARK_RED + "You speak, but there's no one close enough to hear you...");
             return;
         }
@@ -71,8 +90,13 @@ public class RangedChatService {
         // if players are in range, send msg to all of them
         for (var entity : player.getWorld().getNearbyEntities(player.getLocation(), radius, radius, radius, x -> x instanceof Player)){
                 entity.sendMessage(formattedMessage);
+                Bukkit.getServer().getConsoleSender().sendMessage(formattedMessage);
         }
-
+        for (var id : plugin.chatspyUsers) {
+            var p = Bukkit.getPlayer(id);
+            if (p == null) continue;
+            p.sendMessage(ChatColor.DARK_RED + "[SPY]" + ChatColor.RESET + formattedMessage);
+        }
     }
 
     public void SendRangedChat(Player player, String message, String range){
