@@ -90,8 +90,8 @@ public class RangedChatService {
         // if players are in range, send msg to all of them
         for (var entity : player.getWorld().getNearbyEntities(player.getLocation(), radius, radius, radius, x -> x instanceof Player)){
                 entity.sendMessage(formattedMessage);
-                Bukkit.getServer().getConsoleSender().sendMessage(formattedMessage);
         }
+        Bukkit.getServer().getConsoleSender().sendMessage(formattedMessage);
         for (var id : plugin.chatspyUsers) {
             var p = Bukkit.getPlayer(id);
             if (p == null) continue;
