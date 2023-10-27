@@ -1,6 +1,9 @@
 package me.numilani.fastrpchat.services;
 
 import me.numilani.fastrpchat.FastRpChat;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -36,7 +39,9 @@ public class RangedChatService {
 
     public ChatColor GetRangeColor(String range){
         switch (range){
-            case "global", "province":
+            case "global":
+                return ChatColor.AQUA;
+            case "province":
                 return ChatColor.DARK_AQUA;
             case "yell":
                 return ChatColor.YELLOW;
@@ -58,7 +63,10 @@ public class RangedChatService {
         if (radius == -1){
             // do global chat
             for (var p : Bukkit.getOnlinePlayers()){
-                p.sendMessage(formattedMessage);
+                if (!plugin.UserRangeMutes.containsKey(p.getUniqueId()) || !plugin.UserRangeMutes.get(p.getUniqueId()).contains(radius)){
+                    p.sendMessage(formattedMessage);
+                }
+//                p.sendMessage(formattedMessage);
             }
             return;
         }
@@ -89,7 +97,9 @@ public class RangedChatService {
 
         // if players are in range, send msg to all of them
         for (var entity : player.getWorld().getNearbyEntities(player.getLocation(), radius, radius, radius, x -> x instanceof Player)){
+            if (!plugin.UserRangeMutes.containsKey(player.getUniqueId()) || !plugin.UserRangeMutes.get(player.getUniqueId()).contains(radius)){
                 entity.sendMessage(formattedMessage);
+            }
         }
         Bukkit.getServer().getConsoleSender().sendMessage(formattedMessage);
         for (var id : plugin.chatspyUsers) {

@@ -4,7 +4,7 @@ plugins {
 }
 
 group = 'me.numilani'
-version = '1.1.1'
+version = '1.2.0'
 
 repositories {
     mavenCentral()
@@ -32,6 +32,7 @@ dependencies {
     compileOnly 'org.bergerhealer.cloud.commandframework:cloud-paper:1.6.0'
     compileOnly 'org.bergerhealer.cloud.commandframework:cloud-annotations:1.8.0-SNAPSHOT'
     compileOnly 'org.bergerhealer.cloud.commandframework:cloud-minecraft-extras:1.8.0-SNAPSHOT'
+    implementation 'com.google.guava:guava:32.1.2-jre'
 }
 
 def targetJavaVersion = 17

@@ -2,6 +2,8 @@ package me.numilani.fastrpchat;
 
 import com.bergerkiller.bukkit.common.cloud.CloudSimpleHandler;
 import com.bergerkiller.bukkit.common.config.FileConfiguration;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import me.numilani.fastrpchat.commands.ChatCommandHandler;
 import me.numilani.fastrpchat.commands.NameUtilityCommandHandler;
 import me.numilani.fastrpchat.data.IDataSourceConnector;
@@ -12,6 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Dictionary;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +26,8 @@ public final class FastRpChat extends JavaPlugin {
     public RangedChatService rangedChatService = new RangedChatService(this);
 
     public List<UUID> chatspyUsers = new ArrayList<>();
+
+    public Multimap<UUID, Integer> UserRangeMutes = ArrayListMultimap.create();
 
     @Override
     public void onEnable() {

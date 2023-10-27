@@ -5,6 +5,8 @@ import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.ProxiedBy;
 import cloud.commandframework.annotations.specifier.Greedy;
+import cloud.commandframework.annotations.suggestions.Suggestions;
+import cloud.commandframework.context.CommandContext;
 import me.numilani.fastrpchat.FastRpChat;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
@@ -12,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 
 public class ChatCommandHandler {
 
@@ -30,7 +33,7 @@ public class ChatCommandHandler {
     }
 
     @CommandMethod("ch <range> [msg]")
-    public void ChangeChannelOrSend(CommandSender sender, @Argument("range") String range, @Greedy @Argument("msg") String msg) throws SQLException {
+    public void ChangeChannelOrSend(CommandSender sender, @Argument(value = "range", suggestions = "rangeSuggestions") String range, @Greedy @Argument("msg") String msg) throws SQLException {
         if (msg == null || msg.isEmpty()){
 
             if (!Arrays.stream(knownRanges).toList().contains(range.toLowerCase())){
@@ -156,4 +159,27 @@ public class ChatCommandHandler {
         ChangeChannelOrSend(sender, "staff", msg);
     }
 
+    @Suggestions("rangeSuggestions")
+    public List<String> rangeSuggestions(CommandContext ctx, String input){
+        return Arrays.stream(knownRanges).toList();
+    }
+
+    @CommandMethod("muterange <range>")
+    public void MuteRange(CommandSender sender, @Argument(value = "range", suggestions = "rangeSuggestions")String range) throws Exception {
+        if (!Arrays.stream(knownRanges).toList().contains(range.toLowerCase())){
+            sender.sendMessage(String.format(ChatColor.DARK_RED + "Unknown range %s", range));
+        }
+        else{
+            var x = plugin.rangedChatService.GetRangeRadius(range);
+            if (plugin.UserRangeMutes.containsKey(((Player)sender).getUniqueId())){
+                plugin.UserRangeMutes.remove(((Player)sender).getUniqueId(), x);
+                sender.sendMessage(String.format("Unmuted range %s", range));
+                return;
+            }
+            else{
+                plugin.UserRangeMutes.put(((Player)sender).getUniqueId(), x);
+                sender.sendMessage(String.format("Muted range %s", range));
+            }
+        }
+    }
 }
