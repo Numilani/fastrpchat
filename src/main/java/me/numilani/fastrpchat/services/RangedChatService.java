@@ -138,8 +138,11 @@ public class RangedChatService {
                 .append(": ", ComponentBuilder.FormatRetention.NONE)
                     .color(net.md_5.bungee.api.ChatColor.RESET);
 
-        if (spltMessage.length == 1){
-            formattedComponent = formattedComponent.append(message)
+        if (spltMessage.length == 0){
+            formattedComponent = formattedComponent.append(CreateItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
+        }
+        else if (spltMessage.length == 1){
+            formattedComponent = formattedComponent.append(message, ComponentBuilder.FormatRetention.NONE)
                     .color(GetRangeColor(range).asBungee());
         }
         else{
@@ -211,8 +214,10 @@ public class RangedChatService {
             return new TextComponent("[air]");
         }
         if (!player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()){
-            var x = new TextComponent("[" + player.getInventory().getItemInMainHand().getType().name().replace("_", " ").toLowerCase() + "]");
+            var itemName = player.getInventory().getItemInMainHand().getType().name().replace("_", " ").toLowerCase();
+            var x = new TextComponent("[" + itemName + "]");
             x.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(item.toJson()).create()));
+            return x;
         }
         var x = new TextComponent("[" + player.getInventory().getItemInMainHand().getItemMeta().getDisplayName() + "]");
         x.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(item.toJson()).create()));
