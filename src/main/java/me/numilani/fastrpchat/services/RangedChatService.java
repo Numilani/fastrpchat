@@ -127,7 +127,7 @@ public class RangedChatService {
 
         var formattedMsg = String.format("[" + GetRangeColor(range) + range.toUpperCase().toCharArray()[0] + ChatColor.RESET  + "] %s:" + GetRangeColor(range) + " %s",     player.getDisplayName(), message);
 
-        var spltMessage = message.split("@hand");
+        var spltMessage = message.split(" ");
 
         var formattedComponent = new ComponentBuilder("[")
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
@@ -138,22 +138,14 @@ public class RangedChatService {
                 .append(": ", ComponentBuilder.FormatRetention.NONE)
                     .color(net.md_5.bungee.api.ChatColor.RESET);
 
-        if (spltMessage.length == 0){
-            formattedComponent = formattedComponent.append(CreateItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
-        }
-        else if (spltMessage.length == 1){
-            formattedComponent = formattedComponent.append(message, ComponentBuilder.FormatRetention.NONE)
-                    .color(GetRangeColor(range).asBungee());
-        }
-        else{
-            for (int i = 0; i < spltMessage.length - 1; i++) {
-                formattedComponent = formattedComponent.append(spltMessage[i], ComponentBuilder.FormatRetention.NONE)
-                        .color(GetRangeColor(range).asBungee())
-                        .append(CreateItemHoverComponent(player));
+        for (var str : spltMessage) {
+            if (str.equals("@hand")){
+                formattedComponent = formattedComponent.append(CreateItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
             }
-            formattedComponent = formattedComponent.append(spltMessage[spltMessage.length-1], ComponentBuilder.FormatRetention.NONE)
-                    .color(GetRangeColor(range).asBungee());
-
+            else{
+                formattedComponent = formattedComponent.append(str + " ", ComponentBuilder.FormatRetention.NONE)
+                        .color(GetRangeColor(range).asBungee());
+            }
         }
         var finalComponent = formattedComponent.create();
 
@@ -171,9 +163,9 @@ public class RangedChatService {
             return;
         }
 
-        var formattedMsg = String.format("[" + GetRangeColor(range) + range.toUpperCase().toCharArray()[0] + ChatColor.RESET  + "] %s" + GetRangeColor(range) + ChatColor.ITALIC + " %s", player.getDisplayName(), message);
+        var formattedMsg = String.format("[" + GetRangeColor(range) + range.toUpperCase().toCharArray()[0] + ChatColor.RESET  + "] %s" + GetRangeColor(range) + ChatColor.ITALIC + " %s", player.getDisplayName());
 
-        var spltMessage = message.split("@hand");
+        var spltMessage = message.split(" ");
 
         var formattedComponent = new ComponentBuilder("[")
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
@@ -184,23 +176,16 @@ public class RangedChatService {
                 .append(" ", ComponentBuilder.FormatRetention.NONE)
                     .color(net.md_5.bungee.api.ChatColor.RESET);
 
-        if (spltMessage.length == 1){
-            formattedComponent = formattedComponent.append(message)
-                .color(GetRangeColor(range).asBungee())
-                .italic(true);
-        }
-        else{
-            for (int i = 0; i < spltMessage.length - 1; i++) {
-                formattedComponent = formattedComponent.append(spltMessage[i], ComponentBuilder.FormatRetention.NONE)
-                    .color(GetRangeColor(range).asBungee())
-                    .italic(true)
-                .append(CreateItemHoverComponent(player));
+        for (var str : spltMessage) {
+            if (str.equals("@hand")){
+                formattedComponent = formattedComponent.append(CreateItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
             }
-            formattedComponent = formattedComponent.append(spltMessage[spltMessage.length-1], ComponentBuilder.FormatRetention.NONE)
-                .color(GetRangeColor(range).asBungee())
-                .italic(true);
-
+            else{
+                formattedComponent = formattedComponent.append(str + " ", ComponentBuilder.FormatRetention.NONE)
+                        .color(GetRangeColor(range).asBungee()).italic(true);
+            }
         }
+
         var finalComponent = formattedComponent.create();
 
         SendRangedMessage(player, finalComponent, formattedMsg, radius);
@@ -211,15 +196,15 @@ public class RangedChatService {
     public TextComponent CreateItemHoverComponent(Player player){
         var item = NBTEditor.getNBTCompound(player.getInventory().getItemInMainHand());
         if (player.getInventory().getItemInMainHand().getItemMeta() == null){
-            return new TextComponent("[air]");
+            return new TextComponent("[air] ");
         }
         if (!player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()){
             var itemName = player.getInventory().getItemInMainHand().getType().name().replace("_", " ").toLowerCase();
-            var x = new TextComponent("[" + itemName + "]");
+            var x = new TextComponent("[" + itemName + "] ");
             x.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(item.toJson()).create()));
             return x;
         }
-        var x = new TextComponent("[" + player.getInventory().getItemInMainHand().getItemMeta().getDisplayName() + "]");
+        var x = new TextComponent("[" + player.getInventory().getItemInMainHand().getItemMeta().getDisplayName() + "] ");
         x.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(item.toJson()).create()));
         return x;
     }
