@@ -171,7 +171,7 @@ public class ChatCommandHandler {
         }
         else{
             var x = plugin.rangedChatService.GetRangeRadius(range);
-            if (plugin.UserRangeMutes.containsKey(((Player)sender).getUniqueId())){
+            if (plugin.UserRangeMutes.containsKey(((Player)sender).getUniqueId()) && plugin.UserRangeMutes.get(((Player)sender).getUniqueId()).contains(x)){
                 plugin.UserRangeMutes.remove(((Player)sender).getUniqueId(), x);
                 sender.sendMessage(String.format("Unmuted range %s", range));
                 return;

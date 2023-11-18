@@ -100,7 +100,7 @@ public class RangedChatService {
 
         // if players are in range, send msg to all of them
         for (var entity : player.getWorld().getNearbyEntities(player.getLocation(), radius, radius, radius, x -> x instanceof Player)){
-            if (!plugin.UserRangeMutes.containsKey(player.getUniqueId()) || !plugin.UserRangeMutes.get(player.getUniqueId()).contains(radius)){
+            if (!plugin.UserRangeMutes.containsKey(entity.getUniqueId()) || !plugin.UserRangeMutes.get(entity.getUniqueId()).contains(radius)){
                 entity.spigot().sendMessage(componentMessage);
             }
         }
