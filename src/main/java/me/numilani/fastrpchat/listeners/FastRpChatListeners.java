@@ -33,7 +33,7 @@ public class FastRpChatListeners implements Listener {
                 try {
                     plugin.rangedChatService.SendRangedChat(
                             event.getPlayer(),
-                            event.getMessage(),
+                            event.getMessage().split(" "),
                             plugin.dataSource.getChatRange(event.getPlayer().getUniqueId().toString()));
                 } catch (SQLException e) {
                     throw new RuntimeException(e);

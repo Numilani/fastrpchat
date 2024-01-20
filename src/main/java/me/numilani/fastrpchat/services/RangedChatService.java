@@ -10,6 +10,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
+import java.util.Objects;
+
 public class RangedChatService {
 
     private FastRpChat plugin;
@@ -81,6 +84,11 @@ public class RangedChatService {
             return;
         }
 
+        if (plugin.ChatPausedPlayers.contains(player.getUniqueId()) && !player.hasPermission("fastrpchat.ignorechatpauses")){
+            player.sendMessage("Your chat is paused! Please wait until chat is unpaused before continuing.");
+            return;
+        }
+
         // send message to self
 
         // inform player if no one is in range to hear
@@ -114,7 +122,7 @@ public class RangedChatService {
         }
     }
 
-    public void SendRangedChat(Player player, String message, String range){
+    public void SendRangedChat(Player player, String[] message, String range){
 
         int radius;
 
@@ -127,7 +135,7 @@ public class RangedChatService {
 
         var formattedMsg = String.format("[" + GetRangeColor(range) + range.toUpperCase().toCharArray()[0] + ChatColor.RESET  + "] %s:" + GetRangeColor(range) + " %s",     player.getDisplayName(), message);
 
-        var spltMessage = message.split(" ");
+//        var spltMessage = message.split(" ");
 
         var formattedComponent = new ComponentBuilder("[")
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
@@ -138,9 +146,13 @@ public class RangedChatService {
                 .append(": ", ComponentBuilder.FormatRetention.NONE)
                     .color(net.md_5.bungee.api.ChatColor.RESET);
 
-        for (var str : spltMessage) {
+        for (var str : message) {
+
             if (str.equals("@hand")){
-                formattedComponent = formattedComponent.append(CreateItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
+                formattedComponent = formattedComponent.append(CreateMainhandItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
+            }
+            else if (str.equals("@offhand")){
+                formattedComponent = formattedComponent.append(CreateOffhandItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
             }
             else{
                 formattedComponent = formattedComponent.append(str + " ", ComponentBuilder.FormatRetention.NONE)
@@ -153,7 +165,7 @@ public class RangedChatService {
         SendRangedMessage(player, finalComponent, formattedMsg, radius);
     }
 
-    public void SendRangedEmote(Player player, String message, String range){
+    public void SendRangedEmote(Player player, String[] message, String range){
         int radius;
 
         try{
@@ -165,7 +177,7 @@ public class RangedChatService {
 
         var formattedMsg = String.format("[" + GetRangeColor(range) + range.toUpperCase().toCharArray()[0] + ChatColor.RESET  + "] %s" + GetRangeColor(range) + ChatColor.ITALIC + " %s", player.getDisplayName(), message);
 
-        var spltMessage = message.split(" ");
+//        var spltMessage = message.split(" ");
 
         var formattedComponent = new ComponentBuilder("[")
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
@@ -176,9 +188,13 @@ public class RangedChatService {
                 .append(" ", ComponentBuilder.FormatRetention.NONE)
                     .color(net.md_5.bungee.api.ChatColor.RESET);
 
-        for (var str : spltMessage) {
+        for (var str : message) {
+
             if (str.equals("@hand")){
-                formattedComponent = formattedComponent.append(CreateItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
+                formattedComponent = formattedComponent.append(CreateMainhandItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
+            }
+            else if (str.equals("@offhand")){
+                formattedComponent = formattedComponent.append(CreateOffhandItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
             }
             else{
                 formattedComponent = formattedComponent.append(str + " ", ComponentBuilder.FormatRetention.NONE)
@@ -191,20 +207,46 @@ public class RangedChatService {
         SendRangedMessage(player, finalComponent, formattedMsg, radius);
     }
 
+    public void PauseChatsNearby(Player player, int radius){
+        for (var entity : player.getWorld().getNearbyEntities(player.getLocation(), radius, radius, radius, x -> x instanceof Player)){
+            plugin.ChatPausedPlayers.add(player.getUniqueId());
+            player.sendMessage(String.format("Chat paused for all players in %d radius.", radius));
+        }
+    }
 
+    public void UnpauseChats(Player player){
+        plugin.ChatPausedPlayers = new ArrayList<>();
+        player.sendMessage("Unpaused all chats.");
+    }
 
-    public TextComponent CreateItemHoverComponent(Player player){
+    public TextComponent CreateMainhandItemHoverComponent(Player player){
         var item = NBTEditor.getNBTCompound(player.getInventory().getItemInMainHand());
         if (player.getInventory().getItemInMainHand().getItemMeta() == null){
             return new TextComponent("[air] ");
         }
         if (!player.getInventory().getItemInMainHand().getItemMeta().hasDisplayName()){
             var itemName = player.getInventory().getItemInMainHand().getType().name().replace("_", " ").toLowerCase();
-            var x = new TextComponent("[" + itemName + "] ");
+            var x = new TextComponent("[" + itemName + ChatColor.WHITE + "] ");
             x.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(item.toJson()).create()));
             return x;
         }
-        var x = new TextComponent("[" + player.getInventory().getItemInMainHand().getItemMeta().getDisplayName() + "] ");
+        var x = new TextComponent("[" + player.getInventory().getItemInMainHand().getItemMeta().getDisplayName() + ChatColor.WHITE + "] ");
+        x.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(item.toJson()).create()));
+        return x;
+    }
+
+    public TextComponent CreateOffhandItemHoverComponent(Player player){
+        var item = NBTEditor.getNBTCompound(player.getInventory().getItemInOffHand());
+        if (player.getInventory().getItemInOffHand().getItemMeta() == null){
+            return new TextComponent("[air] ");
+        }
+        if (!Objects.requireNonNull(player.getInventory().getItemInOffHand().getItemMeta()).hasDisplayName()){
+            var itemName = player.getInventory().getItemInOffHand().getType().name().replace("_", " ").toLowerCase();
+            var x = new TextComponent("[" + itemName + ChatColor.WHITE + "] ");
+            x.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(item.toJson()).create()));
+            return x;
+        }
+        var x = new TextComponent("[" + player.getInventory().getItemInOffHand().getItemMeta().getDisplayName() + ChatColor.WHITE + "] ");
         x.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, new ComponentBuilder(item.toJson()).create()));
         return x;
     }
