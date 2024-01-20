@@ -29,14 +29,9 @@ public class ChatCommandHandler {
         this.plugin = plugin;
     }
 
-//    @CommandMethod("test <blah>")
-    public void testBlah(CommandSender sender, @Argument("blah") String blah){
-        plugin.getLogger().info(String.format("test command: %s", blah));
-    }
-
     @CommandMethod("ch <range> [msg]")
-    public void ChangeChannelOrSend(CommandSender sender, @Argument(value = "range", suggestions = "rangeSuggestions") String range, @Greedy @Argument("msg") String[] msg) throws SQLException {
-        if (msg == null || msg.length == 0){
+    public void ChangeChannelOrSend(CommandSender sender, @Argument(value = "range", suggestions = "rangeSuggestions") String range, @Greedy @Argument("msg") String msg) throws SQLException {
+        if (msg == null || msg.isBlank() || msg.isEmpty()){
 
             if (!Arrays.stream(knownRanges).toList().contains(range.toLowerCase())){
                 sender.sendMessage(String.format(ChatColor.DARK_RED + "Unknown range %s", range));
@@ -52,7 +47,7 @@ public class ChatCommandHandler {
     }
 
     @CommandMethod("emote <range> <emote>")
-    public void SendEmote(CommandSender sender, @Argument("range") String range, @Greedy @Argument("emote") String[] emote){
+    public void SendEmote(CommandSender sender, @Argument("range") String range, @Greedy @Argument("emote") String emote){
             if (!Arrays.stream(knownRanges).toList().contains(range.toLowerCase())){
                 sender.sendMessage(String.format(ChatColor.DARK_RED + "Unknown range %s", range));
             }
@@ -84,68 +79,68 @@ public class ChatCommandHandler {
 
     @ProxiedBy("g")
     @CommandMethod("global [msg]")
-    public void ChatGlobal(CommandSender sender, @Argument("msg") String[] msg) throws SQLException {
+    public void ChatGlobal(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "global", msg);
     }
 
     @ProxiedBy("p")
     @CommandMethod("province [msg]")
-    public void ChatProvince(CommandSender sender, @Argument("msg") String[] msg) throws SQLException {
+    public void ChatProvince(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "province", msg);
     }
 
     @ProxiedBy("y")
     @CommandMethod("yell [msg]")
-    public void ChatYell(CommandSender sender, @Argument("msg") String[] msg) throws SQLException {
+    public void ChatYell(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "yell", msg);
     }
 
     @ProxiedBy("l")
     @CommandMethod("local [msg]")
-    public void ChatLocal(CommandSender sender, @Argument("msg") String[] msg) throws SQLException {
+    public void ChatLocal(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "local", msg);
     }
 
     @ProxiedBy("q")
     @CommandMethod("quiet [msg]")
-    public void ChatQuiet(CommandSender sender, @Argument("msg") String[] msg) throws SQLException {
+    public void ChatQuiet(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "quiet", msg);
     }
 
     @ProxiedBy("wh")
     @CommandMethod("whisper [msg]")
-    public void ChatWhisper(CommandSender sender, @Argument("msg") String[] msg) throws SQLException {
+    public void ChatWhisper(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "whisper", msg);
     }
 
     @CommandMethod("meg <emote>")
-    public void EmoteGlobal(CommandSender sender, @Argument("emote") String[] emote){
+    public void EmoteGlobal(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "global", emote);
     }
 
     @CommandMethod("mep <emote>")
-    public void EmoteProvince(CommandSender sender, @Argument("emote") String[] emote){
+    public void EmoteProvince(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "province", emote);
     }
 
     @CommandMethod("mey <emote>")
-    public void EmoteYell(CommandSender sender, @Argument("emote") String[] emote){
+    public void EmoteYell(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "yell", emote);
     }
 
     @CommandMethod("mel <emote>")
-    public void EmoteLocal(CommandSender sender, @Argument("emote") String[] emote){
+    public void EmoteLocal(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "local", emote);
     }
 
     @CommandMethod("meq <emote>")
-    public void EmoteQuiet(CommandSender sender, @Argument("emote") String[] emote){
+    public void EmoteQuiet(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "quiet", emote);
     }
 
     @ProxiedBy("mewh")
     @CommandMethod("mew <emote>")
-    public void EmoteWhisper(CommandSender sender, @Argument("emote") String[] emote){
+    public void EmoteWhisper(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "whisper", emote);
     }
 
@@ -166,7 +161,7 @@ public class ChatCommandHandler {
     @CommandPermission("fastrpchat.staffchat")
     @ProxiedBy("st")
     @CommandMethod("staff [msg]")
-    public void ChatStaff(CommandSender sender, @Greedy @Argument(value = "msg") String[] msg) throws SQLException {
+    public void ChatStaff(CommandSender sender, @Greedy @Argument(value = "msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "staff", msg);
     }
 

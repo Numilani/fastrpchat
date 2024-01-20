@@ -122,7 +122,7 @@ public class RangedChatService {
         }
     }
 
-    public void SendRangedChat(Player player, String[] message, String range){
+    public void SendRangedChat(Player player, String message, String range){
 
         int radius;
 
@@ -135,7 +135,7 @@ public class RangedChatService {
 
         var formattedMsg = String.format("[" + GetRangeColor(range) + range.toUpperCase().toCharArray()[0] + ChatColor.RESET  + "] %s:" + GetRangeColor(range) + " %s",     player.getDisplayName(), message);
 
-//        var spltMessage = message.split(" ");
+        var spltMessage = message.split(" ");
 
         var formattedComponent = new ComponentBuilder("[")
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
@@ -146,7 +146,7 @@ public class RangedChatService {
                 .append(": ", ComponentBuilder.FormatRetention.NONE)
                     .color(net.md_5.bungee.api.ChatColor.RESET);
 
-        for (var str : message) {
+        for (var str : spltMessage) {
 
             if (str.equals("@hand")){
                 formattedComponent = formattedComponent.append(CreateMainhandItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
@@ -165,7 +165,7 @@ public class RangedChatService {
         SendRangedMessage(player, finalComponent, formattedMsg, radius);
     }
 
-    public void SendRangedEmote(Player player, String[] message, String range){
+    public void SendRangedEmote(Player player, String message, String range){
         int radius;
 
         try{
@@ -177,7 +177,7 @@ public class RangedChatService {
 
         var formattedMsg = String.format("[" + GetRangeColor(range) + range.toUpperCase().toCharArray()[0] + ChatColor.RESET  + "] %s" + GetRangeColor(range) + ChatColor.ITALIC + " %s", player.getDisplayName(), message);
 
-//        var spltMessage = message.split(" ");
+        var spltMessage = message.split(" ");
 
         var formattedComponent = new ComponentBuilder("[")
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
@@ -188,7 +188,7 @@ public class RangedChatService {
                 .append(" ", ComponentBuilder.FormatRetention.NONE)
                     .color(net.md_5.bungee.api.ChatColor.RESET);
 
-        for (var str : message) {
+        for (var str : spltMessage) {
 
             if (str.equals("@hand")){
                 formattedComponent = formattedComponent.append(CreateMainhandItemHoverComponent(player), ComponentBuilder.FormatRetention.NONE);
