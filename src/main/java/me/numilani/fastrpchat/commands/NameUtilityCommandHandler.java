@@ -1,12 +1,11 @@
 package me.numilani.fastrpchat.commands;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
 import me.numilani.fastrpchat.FastRpChat;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
 
 public class NameUtilityCommandHandler {
     private FastRpChat plugin;
@@ -16,7 +15,7 @@ public class NameUtilityCommandHandler {
     }
 
     // TODO: add preprocessor for autocompleting usernames of online players
-    @CommandMethod("nickname <username>")
+    @Command("nickname <username>")
     public void Nickname(CommandSender sender, @Argument("username")String username){
         var results = Bukkit.getOnlinePlayers().stream().filter(x -> x.getName().equals(username)).toList();
         if (results.isEmpty()){

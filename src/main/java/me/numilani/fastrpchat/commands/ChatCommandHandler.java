@@ -1,18 +1,16 @@
 package me.numilani.fastrpchat.commands;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.ProxiedBy;
-import cloud.commandframework.annotations.parsers.Parser;
-import cloud.commandframework.annotations.specifier.FlagYielding;
-import cloud.commandframework.annotations.specifier.Greedy;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
 import me.numilani.fastrpchat.FastRpChat;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.incendo.cloud.annotation.specifier.Greedy;
+import org.incendo.cloud.annotations.Argument;
+import org.incendo.cloud.annotations.Command;
+import org.incendo.cloud.annotations.Permission;
+import org.incendo.cloud.annotations.ProxiedBy;
+import org.incendo.cloud.annotations.suggestion.Suggestions;
+import org.incendo.cloud.context.CommandContext;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -29,7 +27,7 @@ public class ChatCommandHandler {
         this.plugin = plugin;
     }
 
-    @CommandMethod("ch <range> [msg]")
+    @Command("ch <range> [msg]")
     public void ChangeChannelOrSend(CommandSender sender, @Argument(value = "range", suggestions = "rangeSuggestions") String range, @Greedy @Argument("msg") String msg) throws SQLException {
         if (msg == null || msg.isBlank() || msg.isEmpty()){
 
@@ -46,7 +44,7 @@ public class ChatCommandHandler {
         }
     }
 
-    @CommandMethod("emote <range> <emote>")
+    @Command("emote <range> <emote>")
     public void SendEmote(CommandSender sender, @Argument("range") String range, @Greedy @Argument("emote") String emote){
             if (!Arrays.stream(knownRanges).toList().contains(range.toLowerCase())){
                 sender.sendMessage(String.format(ChatColor.DARK_RED + "Unknown range %s", range));
@@ -56,7 +54,7 @@ public class ChatCommandHandler {
         }
     }
 
-    @CommandMethod("ranges")
+    @Command("ranges")
     public void ListRanges(CommandSender sender) throws Exception {
         sender.sendMessage(String.format(ChatColor.BOLD + "" +  ChatColor.GRAY + "=== RANGES ==="));
         for (var rg: knownRanges) {
@@ -64,12 +62,12 @@ public class ChatCommandHandler {
         }
     }
 
-    @CommandMethod("pausechat <radius>")
+    @Command("pausechat <radius>")
     public void PauseNearbyChat(CommandSender sender, @Argument("radius") int radius){
         plugin.rangedChatService.PauseChatsNearby((Player) sender, radius);
     }
 
-    @CommandMethod("unpausechat")
+    @Command("unpausechat")
     public void UnpauseChats(CommandSender sender){
         plugin.rangedChatService.UnpauseChats((Player) sender);
     }
@@ -78,74 +76,74 @@ public class ChatCommandHandler {
     // EVENTUALLY THIS SHOULD ALL GET REFACTORED TO BE DYNAMIC COMMANDS
 
     @ProxiedBy("g")
-    @CommandMethod("global [msg]")
+    @Command("global [msg]")
     public void ChatGlobal(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "global", msg);
     }
 
     @ProxiedBy("p")
-    @CommandMethod("province [msg]")
+    @Command("province [msg]")
     public void ChatProvince(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "province", msg);
     }
 
     @ProxiedBy("y")
-    @CommandMethod("yell [msg]")
+    @Command("yell [msg]")
     public void ChatYell(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "yell", msg);
     }
 
     @ProxiedBy("l")
-    @CommandMethod("local [msg]")
+    @Command("local [msg]")
     public void ChatLocal(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "local", msg);
     }
 
     @ProxiedBy("q")
-    @CommandMethod("quiet [msg]")
+    @Command("quiet [msg]")
     public void ChatQuiet(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "quiet", msg);
     }
 
     @ProxiedBy("wh")
-    @CommandMethod("whisper [msg]")
+    @Command("whisper [msg]")
     public void ChatWhisper(CommandSender sender, @Greedy @Argument("msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "whisper", msg);
     }
 
-    @CommandMethod("meg <emote>")
+    @Command("meg <emote>")
     public void EmoteGlobal(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "global", emote);
     }
 
-    @CommandMethod("mep <emote>")
+    @Command("mep <emote>")
     public void EmoteProvince(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "province", emote);
     }
 
-    @CommandMethod("mey <emote>")
+    @Command("mey <emote>")
     public void EmoteYell(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "yell", emote);
     }
 
-    @CommandMethod("mel <emote>")
+    @Command("mel <emote>")
     public void EmoteLocal(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "local", emote);
     }
 
-    @CommandMethod("meq <emote>")
+    @Command("meq <emote>")
     public void EmoteQuiet(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "quiet", emote);
     }
 
     @ProxiedBy("mewh")
-    @CommandMethod("mew <emote>")
+    @Command("mew <emote>")
     public void EmoteWhisper(CommandSender sender, @Greedy @Argument("emote") String emote){
         SendEmote(sender, "whisper", emote);
     }
 
-    @CommandPermission("fastrpchat.chatspy")
-    @CommandMethod("chatspy")
+    @Permission("fastrpchat.chatspy")
+    @Command("chatspy")
     public void ToggleChatspy(CommandSender sender) {
         var userId = ((Player)sender).getUniqueId();
         if (plugin.chatspyUsers.contains(userId)){
@@ -158,9 +156,9 @@ public class ChatCommandHandler {
         }
     }
 
-    @CommandPermission("fastrpchat.staffchat")
+    @Permission("fastrpchat.staffchat")
     @ProxiedBy("st")
-    @CommandMethod("staff [msg]")
+    @Command("staff [msg]")
     public void ChatStaff(CommandSender sender, @Greedy @Argument(value = "msg") String msg) throws SQLException {
         ChangeChannelOrSend(sender, "staff", msg);
     }
@@ -170,7 +168,7 @@ public class ChatCommandHandler {
         return Arrays.stream(knownRanges).toList();
     }
 
-    @CommandMethod("muterange <range>")
+    @Command("muterange <range>")
     public void MuteRange(CommandSender sender, @Argument(value = "range", suggestions = "rangeSuggestions")String range) throws Exception {
         if (!Arrays.stream(knownRanges).toList().contains(range.toLowerCase())){
             sender.sendMessage(String.format(ChatColor.DARK_RED + "Unknown range %s", range));

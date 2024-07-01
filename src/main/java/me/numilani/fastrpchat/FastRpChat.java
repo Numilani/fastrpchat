@@ -1,11 +1,5 @@
 package me.numilani.fastrpchat;
 
-import cloud.commandframework.annotations.AnnotationParser;
-import cloud.commandframework.bukkit.CloudBukkitCapabilities;
-import cloud.commandframework.execution.CommandExecutionCoordinator;
-import cloud.commandframework.meta.SimpleCommandMeta;
-import cloud.commandframework.paper.PaperCommandManager;
-import com.bergerkiller.bukkit.common.cloud.CloudSimpleHandler;
 import com.bergerkiller.bukkit.common.config.FileConfiguration;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
@@ -17,10 +11,15 @@ import me.numilani.fastrpchat.listeners.FastRpChatListeners;
 import me.numilani.fastrpchat.services.RangedChatService;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.incendo.cloud.annotations.AnnotationParser;
+import org.incendo.cloud.bukkit.CloudBukkitCapabilities;
+import org.incendo.cloud.execution.ExecutionCoordinator;
+import org.incendo.cloud.meta.SimpleCommandMeta;
+import org.incendo.cloud.paper.LegacyPaperCommandManager;
+import org.incendo.cloud.paper.PaperCommandManager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
@@ -28,7 +27,7 @@ import java.util.function.Function;
 public final class FastRpChat extends JavaPlugin {
 
 //    public CloudSimpleHandler cmdHandler = new CloudSimpleHandler();
-    public PaperCommandManager<CommandSender> cmdHandler;
+    public LegacyPaperCommandManager<CommandSender> cmdHandler;
     public AnnotationParser<CommandSender> cmdParser;
     public FileConfiguration cfg;
     public IDataSourceConnector dataSource;
@@ -43,7 +42,7 @@ public final class FastRpChat extends JavaPlugin {
     public void onEnable() {
 
         try {
-            cmdHandler = new PaperCommandManager<>(this, CommandExecutionCoordinator.simpleCoordinator(), Function.identity(), Function.identity());
+            cmdHandler = LegacyPaperCommandManager.createNative(this, ExecutionCoordinator.simpleCoordinator());
             cmdParser = new AnnotationParser<>(cmdHandler, CommandSender.class, parserParameters -> SimpleCommandMeta.empty());
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -68,13 +67,13 @@ public final class FastRpChat extends JavaPlugin {
             throw new RuntimeException(e);
         }
 
-        if (cmdHandler.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
-            cmdHandler.registerAsynchronousCompletions();
-        }
-
-        if (cmdHandler.queryCapability(CloudBukkitCapabilities.BRIGADIER)) {
-            cmdHandler.registerBrigadier();
-        }
+//        if (cmdHandler.queryCapability(CloudBukkitCapabilities.ASYNCHRONOUS_COMPLETION)) {
+//            cmdHandler.registerAsynchronousCompletions();
+//        }
+//
+//        if (cmdHandler.queryCapability(CloudBukkitCapabilities.BRIGADIER)) {
+//            cmdHandler.registerBrigadier();
+//        }
 
         cmdParser.parse(new ChatCommandHandler(this));
         cmdParser.parse(new NameUtilityCommandHandler(this));
