@@ -99,7 +99,7 @@ public class RangedChatService {
                 var p = Bukkit.getPlayer(id);
                 if (p == null) continue;
 //                p.sendMessage(ChatColor.DARK_RED + "[SPY]" + ChatColor.RESET + componentMessage + ChatColor.DARK_GRAY + " [out of range]");
-                var fmt = new ComponentBuilder("[SPY]").color(net.md_5.bungee.api.ChatColor.DARK_RED).append("").color(net.md_5.bungee.api.ChatColor.WHITE).append(componentMessage).append(" [out of range]").color(net.md_5.bungee.api.ChatColor.DARK_GRAY).create();
+                var fmt = new ComponentBuilder("[SPY]").color(net.md_5.bungee.api.ChatColor.DARK_RED).append(componentMessage).append(" [out of range]").color(net.md_5.bungee.api.ChatColor.DARK_GRAY).create();
                 p.spigot().sendMessage(fmt);
             }
             player.sendMessage(ChatColor.DARK_RED + "You speak, but there's no one close enough to hear you...");
@@ -117,7 +117,7 @@ public class RangedChatService {
             var p = Bukkit.getPlayer(id);
             if (p == null) continue;
 //            p.sendMessage(ChatColor.DARK_RED + "[SPY]" + ChatColor.RESET + componentMessage);
-            var fmt = new ComponentBuilder("[SPY]").color(net.md_5.bungee.api.ChatColor.DARK_RED).append("").color(net.md_5.bungee.api.ChatColor.WHITE).append(componentMessage).create();
+            var fmt = new ComponentBuilder("[SPY]").color(net.md_5.bungee.api.ChatColor.DARK_RED).append(componentMessage).create();
             p.spigot().sendMessage(fmt);
         }
     }
@@ -141,10 +141,8 @@ public class RangedChatService {
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
                     .color(GetRangeColor(range).asBungee())
                 .append("] ")
-                    .color(net.md_5.bungee.api.ChatColor.WHITE)
                 .append(CreateNameHoverComponent(player))
-                .append(": ", ComponentBuilder.FormatRetention.NONE)
-                    .color(net.md_5.bungee.api.ChatColor.WHITE);
+                .append(": ", ComponentBuilder.FormatRetention.NONE);
 
         for (var str : spltMessage) {
 
@@ -183,10 +181,8 @@ public class RangedChatService {
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
                     .color(GetRangeColor(range).asBungee())
                 .append("] ")
-                    .color(net.md_5.bungee.api.ChatColor.WHITE)
                 .append(CreateNameHoverComponent(player))
-                .append(" ", ComponentBuilder.FormatRetention.NONE)
-                    .color(net.md_5.bungee.api.ChatColor.WHITE);
+                .append(" ", ComponentBuilder.FormatRetention.NONE);
 
         for (var str : spltMessage) {
 
