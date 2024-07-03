@@ -58,7 +58,7 @@ public class ChatCommandHandler {
     public void ListRanges(CommandSender sender) throws Exception {
         sender.sendMessage(String.format(ChatColor.BOLD + "" +  ChatColor.GRAY + "=== RANGES ==="));
         for (var rg: knownRanges) {
-            sender.sendMessage(String.format("- "+ plugin.rangedChatService.GetRangeColor(rg) + rg + ChatColor.RESET + " (%s blocks)", plugin.rangedChatService.GetRangeRadius(rg)));
+            sender.sendMessage(String.format("- "+ plugin.rangedChatService.GetRangeColor(rg) + rg + ChatColor.WHITE + " (%s blocks)", plugin.rangedChatService.GetRangeRadius(rg)));
         }
     }
 
