@@ -140,7 +140,7 @@ public class RangedChatService {
         var formattedComponent = new ComponentBuilder("[")
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
                     .color(GetRangeColor(range).asBungee())
-                .append("] ")
+                .append("] ", ComponentBuilder.FormatRetention.NONE)
                 .append(CreateNameHoverComponent(player))
                 .append(": ", ComponentBuilder.FormatRetention.NONE);
 
@@ -180,7 +180,7 @@ public class RangedChatService {
         var formattedComponent = new ComponentBuilder("[")
                 .append(Character.toString(range.toUpperCase().toCharArray()[0]))
                     .color(GetRangeColor(range).asBungee())
-                .append("] ")
+                .append("] ", ComponentBuilder.FormatRetention.NONE)
                 .append(CreateNameHoverComponent(player))
                 .append(" ", ComponentBuilder.FormatRetention.NONE);
 
